@@ -1,0 +1,88 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: spring-helloworld
+  namespace: team1-tenant1
+
+  managedFields:
+    - manager: Mozilla
+      operation: Update
+      apiVersion: build.openshift.io/v1
+      time: '2024-10-07T06:58:57Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:runPolicy': {}
+          'f:source':
+            'f:contextDir': {}
+            'f:git':
+              .: {}
+              'f:uri': {}
+            'f:type': {}
+          'f:strategy':
+            'f:sourceStrategy':
+              .: {}
+              'f:from': {}
+            'f:type': {}
+    - manager: openshift-apiserver
+      operation: Update
+      apiVersion: build.openshift.io/v1
+      time: '2024-10-07T06:59:05Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:lastVersion': {}
+spec:
+  nodeSelector: null
+  output: {}
+  resources: {}
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: DockerImage
+        name: java
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/deweya/spring-helloworld'
+    contextDir: /
+  runPolicy: Serial
+status:
+  lastVersion: 1
+
+
+
+Prakashs-MacBook-Pro:git prakash$ oc new-app https://github.com/deweya/spring-helloworld --image-stream=java --name=spring-helloworld
+--> Found image fa083d4 (13 days old) in image stream "openshift/java" under tag "openjdk-17-ubi8" for "java"
+
+    Java Applications 
+    ----------------- 
+    Platform for building and running plain Java applications (fat-jar and flat classpath)
+
+    Tags: builder, java
+
+    * The source repository appears to match: jee
+    * A source build using source code from https://github.com/deweya/spring-helloworld will be created
+      * The resulting image will be pushed to image stream tag "spring-helloworld:latest"
+      * Use 'oc start-build' to trigger a new build
+
+--> Creating resources ...
+    imagestream.image.openshift.io "spring-helloworld" created
+    buildconfig.build.openshift.io "spring-helloworld" created
+    deployment.apps "spring-helloworld" created
+    service "spring-helloworld" created
+--> Success
+    Build scheduled, use 'oc logs -f buildconfig/spring-helloworld' to track its progress.
+    Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
+     'oc expose service/spring-helloworld' 
+    Run 'oc status' to view your app.
+Prakashs-MacBook-Pro:git prakash$
+
+
+oc delete imagestream.image.openshift.io "spring-helloworld"
+oc delete buildconfig.build.openshift.io "spring-helloworld"
+oc delete deployment.apps "spring-helloworld"
+oc delete service "spring-helloworld"
